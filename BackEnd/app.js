@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const fileRoutes = require('./Routes/fileRoutes');
+const userRoutes = require('./Routes/userRoutes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/files', fileRoutes);
+app.use('/api/user', userRoutes );
 
 // Start the server
 const PORT = process.env.PORT || 5010;
