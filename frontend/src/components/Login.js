@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock } from 'react-icons/fi';
 import './Auth.css';
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Assuming validation and authentication are successful
+    navigate('/dashboard'); // Navigate to the dashboard
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -11,7 +19,7 @@ const Login = () => {
           <h2>Sign in to <span>DocManager</span></h2>
           <p><Link to="/register">Or create a new account</Link></p>
         </div>
-        <form className="auth-form">
+        <form className="auth-form" onSubmit={handleLogin}>
           <div className="input-group">
             <FiUser className="input-icon" />
             <input type="text" placeholder="Username" required />
