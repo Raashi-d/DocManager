@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../Models/UserModel');
 
+
+// signup function to register a new user
 const signup = async (req, res) => {
     try {
         //Extract the name, email, and password from the request body
@@ -35,5 +38,7 @@ const signup = async (req, res) => {
 
     }
 }
+
+// signin function to login a user
 
 module.exports = { signup };
