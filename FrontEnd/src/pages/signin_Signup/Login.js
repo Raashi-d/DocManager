@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiUser, FiLock } from 'react-icons/fi';
+import { FiUser, FiLock, FiFileText } from 'react-icons/fi';
 import './Auth.css';
 
 const Login = () => {
@@ -8,16 +8,16 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Assuming validation and authentication are successful
-    navigate('/dashboard'); // Navigate to the dashboard
+    navigate('/dashboard');
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
+          <FiFileText className="document-icon" /> 
           <h2>Sign in to <span>DocManager</span></h2>
-          <p><Link to="/register">Or create a new account</Link></p>
+          <p> <span>Or</span><Link to="/register"> create a new account</Link></p>
         </div>
         <form className="auth-form" onSubmit={handleLogin}>
           <div className="input-group">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiUser, FiMail, FiLock } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiFileText } from 'react-icons/fi';
 import './Auth.css';
 
 const Register = () => {
@@ -8,8 +8,9 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
+          <FiFileText className="document-icon" /> 
           <h2>Create your account</h2>
-          <p><Link to="/login">Already have an account? Sign in</Link></p>
+          <p><span>Already have an account? </span><Link to="/login">Sign in</Link></p>
         </div>
         <form className="auth-form">
           <div className="input-group">
