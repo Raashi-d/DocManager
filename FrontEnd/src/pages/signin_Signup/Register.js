@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiFileText } from 'react-icons/fi';
 import './Auth.css';
 
@@ -13,7 +13,7 @@ const Register = () => {
   const [message, setMessage] = useState('');
   const [successPopup, setSuccessPopup] = useState(false);
   const [riskyEmail, setRiskyEmail] = useState(false);
-  const [errorPopup, setErrorPopup] = useState(false); // Add errorPopup state
+  const [errorPopup, setErrorPopup] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ const Register = () => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
       setSuccessPopup(false);
-      setErrorPopup(true); // Show error popup
+      setErrorPopup(true);
       return;
     }
 
@@ -38,10 +38,10 @@ const Register = () => {
       if (response.status === 200) {
         setMessage('User Registered Successfully');
         setSuccessPopup(true);
-        setErrorPopup(false); // Hide error popup
+        setErrorPopup(false); 
       }
     } catch (error) {
-      console.error('Error during registration:', error); // Log the error for debugging
+      console.error('Error during registration:', error);
       if (error.response) {
         if (error.response.data.message === 'Invalid or risky email address') {
           setRiskyEmail(true);
@@ -52,13 +52,13 @@ const Register = () => {
         setMessage('An error occurred. Please try again.');
       }
       setSuccessPopup(false);
-      setErrorPopup(true); // Show error popup
+      setErrorPopup(true);
     }
   };
 
   const handleSuccessPopupClose = () => {
     setSuccessPopup(false);
-    navigate('/login'); // Redirect to login page after closing the success popup
+    navigate('/login'); 
   };
 
   return (

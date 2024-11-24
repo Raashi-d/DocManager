@@ -25,8 +25,12 @@
   color: #4a56e2;
 }
 
+.auth-header p span {
+  color: black;
+}
+
 .document-icon {
-  color: blue; /* Make the document icon blue */
+  color: blue; 
   font-size: 24px;
   margin-bottom: 10px;
 }
@@ -41,7 +45,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  border: 2px solid #4a56e2; /* Ensure this is the only border property */
+  border: 2px solid #4a56e2;
   border-radius: 6px;
   padding: 12px;
 }
@@ -68,49 +72,50 @@ input {
   font-weight: bold;
 }
 
-/* Error message styles */
+
 .error-message {
-  color: #dc3545; /* Red */
+  color: #dc3545;
   font-size: 14px;
-  margin-top: -10px;
+  margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
-/* Popup styles */
+
 .popup {
-  position: fixed; /* Change to fixed to center on the page */
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Adjust for centering */
+  position: fixed; 
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
   padding: 15px;
   border-radius: 5px;
   font-size: 16px;
-  width: 80%;
+  width: 20%;
   text-align: center;
   z-index: 10;
-  background-color: white; /* Change background to white */
+  background-color: white;
 }
 
 .popup.success {
-  background-color: white; /* Ensure background is white */
-  color: green; /* Change text color to green */
+  background-color: white;
+  color: green;
 }
 
 .popup.success::before {
-  content: '✔'; /* Add green checkmark symbol */
+  content: '✔'; 
   color: green;
   font-size: 20px;
   margin-right: 10px;
 }
 
 .popup.error {
-  background-color: #dc3545; /* Red */
+  background-color: #dc3545;
   color: white;
 }
 
 .popup-button {
-  background-color: #4a56e2; /* Blue background */
-  color: white; /* White text */
+  background-color: #4a56e2;
+  color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;

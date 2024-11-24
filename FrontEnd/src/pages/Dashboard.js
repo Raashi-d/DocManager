@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiSearch, FiFolderPlus, FiUpload, FiLogOut } from 'react-icons/fi';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -18,11 +20,16 @@ const Dashboard = () => {
     }
   };
 
+  const handleLoguot = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
+
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
         <h2>DocManager</h2>
-        <button className="logout-button"><FiLogOut /> Logout</button>
+        <button className="logout-button" onClick={handleLoguot}><FiLogOut /> Logout</button>
       </aside>
       <main className="dashboard-main">
         <header className="dashboard-header">

@@ -1,14 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { FiUser, FiLock, FiFileText } from 'react-icons/fi';
 import './Auth.css';
 
 const Login = () => {
+
+  // State for email, password, and error message
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+    
+    try{
+      // send post req
+      const response = await axios.post('http://localhost:5000/api/user/signin/', 
+        {email,password}
+      )
+
+      if (response.status === 200) {
+        const { token } = response.data;
+
+        //save a JWT token in local for future use
+        localStorage.setItem('token', response.data.token);
+
+        navigate('/dashboard');
+      }
+
+      
+
+    } catch(error){
+
+      if(error.response){
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('Something went wrong. Please try again.');
+      }
+    }
   };
 
   return (
@@ -22,15 +53,28 @@ const Login = () => {
         <form className="auth-form" onSubmit={handleLogin}>
           <div className="input-group">
             <FiUser className="input-icon" />
-            <input type="text" placeholder="Username" required />
+            <input 
+              type="email" 
+              placeholder="Enter Your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required />
           </div>
           <div className="input-group">
             <FiLock className="input-icon" />
-            <input type="password" placeholder="Password" required />
+            <input 
+              type="password" 
+              placeholder="Enter Your Password" 
+              value={password}
+              onChange={ (e) => setPassword(e.target.value)
+              }
+              required />
           </div>
           <p><Link to="/forgot-password">Forgot your password?</Link></p>
           <button type="submit" className="primary-button">Sign in</button>
         </form>
+        {/* Display Error Message if login fails */}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </div>
   );
