@@ -1,10 +1,10 @@
-// const express = require('express');
-// const router = express.Router();
-// const fileController = require('../Controller/fileController'); // Corrected path
-// const upload = require('../Controller/fileController').upload; // Corrected path
+const express = require('express');
+const multer = require('multer');
+const fileController = require('../Controller/fileController');
 
-// router.post('/upload', upload.single('file'), fileController.uploadFile);
-// router.get('/:id', fileController.getFile);
-// router.get('/download/:id', fileController.downloadFile);
+const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
+// Define routes
+router.post('/upload', upload.single('file'), fileController.uploadFile);
 
-// module.exports = router;
+module.exports = router;

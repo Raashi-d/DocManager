@@ -1,58 +1,60 @@
-// const File = require('../Models/File');
-// const multer = require('multer');
-// const path = require('path');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const mongoose = require('mongoose');
+const File = require('../Models/File');
+require('dotenv').config();
 
-// // Setup Multer for file upload
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'uploads/'); // Save to 'uploads' folder
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, Date.now() + path.extname(file.originalname));
-//   },
-// });
-// const upload = multer({ storage: storage });
+// Configure AWS SDK v3
+const s3Client = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+});
 
-// // Export upload for use in routes
-// exports.upload = upload;
+/**
+ * Upload a file to S3 and save metadata to MongoDB.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.uploadFile = async (req, res) => {
+    const file = req.file;
+    const userId = req.body.userId;
 
-// // Upload and save file metadata
-// exports.uploadFile = async (req, res) => {
-//   try {
-//     const file = req.file;
-//     const fileData = new File({
-//       filename: file.filename,
-//       fileType: file.mimetype,
-//       size: file.size,
-//       fileUrl: `/uploads/${file.filename}`, // Update based on storage
-//     });
+    if (!file || !userId) {
+        return res.status(400).json({ error: 'File and userId are required' });
+    }
 
-//     await fileData.save();
-//     res.status(200).json({ message: 'File uploaded successfully', fileData });
-//   } catch (error) {
-//     res.status(500).json({ error: 'File upload failed' });
-//   }
-// };
 
-// // Retrieve file metadata
-// exports.getFile = async (req, res) => {
-//   try {
-//     const file = await File.findById(req.params.id);
-//     if (!file) return res.status(404).json({ error: 'File not found' });
-//     res.json(file);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Error fetching file' });
-//   }
-// };
+    const params = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: `${Date.now()}_${file.originalname}`,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+    };
 
-// // Stream or download file
-// exports.downloadFile = async (req, res) => {
-//   try {
-//     const file = await File.findById(req.params.id);
-//     if (!file) return res.status(404).json({ error: 'File not found' });
+    try {
+        // Upload file to S3
+        const command = new PutObjectCommand(params);
+        const s3Response = await s3Client.send(command);
 
-//     res.download(`./uploads/${file.filename}`, file.filename);
-//   } catch (error) {
-//     res.status(500).json({ error: 'File download failed' });
-//   }
-// };
+        // Save file metadata to MongoDB
+        const newFile = new File({
+            fileName: file.originalname,
+            fileUrl: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
+            fileType: file.mimetype,
+            size: file.size,
+            uploadBy: new mongoose.Types.ObjectId(userId),
+        });
+
+        const savedFile = await newFile.save();
+
+        res.status(201).json({
+            message: 'File uploaded and metadata saved successfully!',
+            file: savedFile,
+        });
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        res.status(500).json({ error: 'File upload failed. Please try again.' });
+    }
+};

@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-//const fileRoutes = require('./Routes/fileRoutes');
+const fileRoutes = require('./Routes/fileRoutes');
 const userRoutes = require('./Routes/userRoutes');
 
 const app = express();
@@ -14,7 +14,8 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 // Enable CORS for requests from your React frontend
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(cors({}));
+// origin: process.env.CLIENT_URL
 
 // Middleware
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use(express.json());
 // Routes
 //app.use('/api/files', fileRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/files', fileRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5010;
