@@ -58,3 +58,29 @@ exports.uploadFile = async (req, res) => {
         res.status(500).json({ error: 'File upload failed. Please try again.' });
     }
 };
+
+
+exports.getUserFiles = async (req, res) => {
+    const { userId } = req.params;  // Retrieve userId from the URL parameters
+
+    if (!userId) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    try {
+        // Find files uploaded by the specific user
+        const files = await File.find({ uploadBy: userId });
+
+        if (!files || files.length === 0) {
+            return res.status(404).json({ message: 'No files found for this user' });
+        }
+
+        res.status(200).json({
+            message: 'Files retrieved successfully!',
+            files: files,
+        });
+    } catch (error) {
+        console.error('Error fetching files:', error);
+        res.status(500).json({ error: 'Failed to retrieve files. Please try again.' });
+    }
+};
