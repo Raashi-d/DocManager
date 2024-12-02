@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiSearch, FiFolderPlus, FiUpload, FiLogOut } from 'react-icons/fi';
-import './Dashboard.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiSearch, FiUpload, FiLogOut } from "react-icons/fi";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [files, setFiles] = useState([]);
-  const [folders, setFolders] = useState([]);
   const navigate = useNavigate();
 
   const handleFileChange = (event) => {
@@ -13,26 +12,24 @@ const Dashboard = () => {
     setFiles([...files, ...selectedFiles]);
   };
 
-  const handleNewFolder = () => {
-    const folderName = prompt("Enter folder name:");
-    if (folderName) {
-      setFolders([...folders, folderName]);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
-
-  const handleLoguot = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  }
 
   return (
     <div className="dashboard-container">
-      <aside className="sidebar">
+      <header className="top-menu">
         <h2>DocManager</h2>
-        <button className="logout-button" onClick={handleLoguot}><FiLogOut /> Logout</button>
-      </aside>
+        <div className="user-info">
+          <h3>User name</h3>
+          <button className="logout-button" onClick={handleLogout}>
+            <FiLogOut /> Logout
+          </button>
+        </div>
+      </header>
       <main className="dashboard-main">
-        <header className="dashboard-header">
+        <div className="dashboard-header">
           <div className="search-bar">
             <FiSearch className="search-icon" />
             <input type="text" placeholder="Search documents..." />
@@ -45,28 +42,19 @@ const Dashboard = () => {
                 type="file"
                 multiple
                 onChange={handleFileChange}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
               />
             </label>
-            <button className="action-button" onClick={handleNewFolder}>
-              <FiFolderPlus /> New Folder
-            </button>
           </div>
-        </header>
+        </div>
         <div className="content">
-          <section className="folders">
-            <h3>Folders</h3>
-            <ul>
-              {folders.map((folder, index) => (
-                <li key={index} className="folder-item">{folder}</li>
-              ))}
-            </ul>
-          </section>
           <section className="documents">
             <h3>Documents</h3>
             <ul>
               {files.map((file, index) => (
-                <li key={index} className="document-item">{file.name}</li>
+                <li key={index} className="document-item">
+                  {file.name}
+                </li>
               ))}
             </ul>
           </section>
