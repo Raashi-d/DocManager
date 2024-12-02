@@ -22,10 +22,12 @@ const Login = () => {
       )
 
       if (response.status === 200) {
-        const { token } = response.data;
+        const { token, user } = response.data;
 
-        //save a JWT token in local for future use
-        localStorage.setItem('token', response.data.token);
+        //save a JWT token, user name, and user ID in local for future use
+        localStorage.setItem('token', token);
+        localStorage.setItem('userName', user.name);
+        localStorage.setItem('userId', user._id);
 
         navigate('/dashboard');
       }
