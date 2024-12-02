@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const mongoose = require('mongoose');
 const File = require('../Models/File');
 require('dotenv').config();
@@ -24,7 +24,6 @@ exports.uploadFile = async (req, res) => {
     if (!file || !userId) {
         return res.status(400).json({ error: 'File and userId are required' });
     }
-
 
     const params = {
         Bucket: process.env.S3_BUCKET_NAME,
@@ -59,7 +58,11 @@ exports.uploadFile = async (req, res) => {
     }
 };
 
-
+/**
+ * Get files uploaded by a specific user.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 exports.getUserFiles = async (req, res) => {
     const { userId } = req.params;  // Retrieve userId from the URL parameters
 
@@ -82,5 +85,44 @@ exports.getUserFiles = async (req, res) => {
     } catch (error) {
         console.error('Error fetching files:', error);
         res.status(500).json({ error: 'Failed to retrieve files. Please try again.' });
+    }
+};
+
+/**
+ * Delete a file from S3 and MongoDB.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.deleteFile = async (req, res) => {
+    const { fileId } = req.params;
+
+    if (!fileId) {
+        return res.status(400).json({ error: 'File ID is required' });
+    }
+
+    try {
+        // Find the file in the database
+        const file = await File.findById(fileId);
+
+        if (!file) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        // Delete the file from S3
+        const deleteParams = {
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: file.fileUrl.split('/').pop(),
+        };
+
+        const deleteCommand = new DeleteObjectCommand(deleteParams);
+        await s3Client.send(deleteCommand);
+
+        // Delete the file metadata from MongoDB
+        await File.findByIdAndDelete(fileId);
+
+        res.status(200).json({ message: 'File deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        res.status(500).json({ error: 'Failed to delete file. Please try again.' });
     }
 };

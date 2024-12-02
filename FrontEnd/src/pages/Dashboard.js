@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiSearch, FiUpload, FiLogOut, FiX } from "react-icons/fi";
+import { FiSearch, FiUpload, FiLogOut, FiX, FiTrash2, FiDownload } from "react-icons/fi";
 import axios from "axios";
 import "./Dashboard.css";
 
@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [files, setFiles] = useState([]);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileToDelete, setFileToDelete] = useState(null);
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const userId = localStorage.getItem("userId");
@@ -25,7 +26,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchFiles();
-  }, []);
+  });
 
   const handleFileChange = async (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -54,6 +55,16 @@ const Dashboard = () => {
     }
   };
 
+  const handleDeleteFile = async () => {
+    try {
+      await axios.delete(`http://localhost:5000/api/files/${fileToDelete._id}`);
+      setFileToDelete(null);
+      fetchFiles(); // Fetch files again to update the list
+    } catch (error) {
+      console.error("Error deleting file:", error);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
@@ -79,6 +90,14 @@ const Dashboard = () => {
 
   const closeFileModal = () => {
     setSelectedFile(null);
+  };
+
+  const openDeletePopup = (file) => {
+    setFileToDelete(file);
+  };
+
+  const closeDeletePopup = () => {
+    setFileToDelete(null);
   };
 
   return (
@@ -156,6 +175,15 @@ const Dashboard = () => {
                     <p>
                       <strong>Size:</strong> {(file.size / 1024).toFixed(2)} KB
                     </p>
+                    <button
+                      className="delete-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeletePopup(file);
+                      }}
+                    >
+                      <FiTrash2 /> Delete
+                    </button>
                   </div>
                 </div>
               ))}
@@ -182,6 +210,15 @@ const Dashboard = () => {
                 />
               )}
             </div>
+          </div>
+        </div>
+      )}
+      {fileToDelete && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to delete this file?</p>
+            <button onClick={handleDeleteFile}>Confirm</button>
+            <button onClick={closeDeletePopup}>Cancel</button>
           </div>
         </div>
       )}
