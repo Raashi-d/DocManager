@@ -196,13 +196,15 @@ const Dashboard = () => {
     return (
       <div className="default-file-preview">
         <p>File preview not available for this file type.</p>
+        
         <button
           className="download-button"
           onClick={() => handleDownload(selectedFile)}
         >
           <FiDownload /> Download File
         </button>
-      </div>
+        </div>
+      
     );
   };
 
