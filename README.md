@@ -5,7 +5,7 @@ Simplify your document storage, access, and management.
 ![homePage](https://github.com/user-attachments/assets/db1936bc-4153-4603-869a-81eb1d7d85b6)
 
 
-## Table of Contents
+## Contents
 - [Introduction](#introduction)
 - [Technologies Used](#technologies-used)
 - [Features Overview](#features-overview)
