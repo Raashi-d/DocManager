@@ -6,22 +6,22 @@ const User = require('../Models/UserModel');
 
 
 // email validation function using API
-async function verifyEmailWithHunter(email) {
-    const apiKey = process.env.EMAIL_VALIDATION_API_KEY;
+// async function verifyEmailWithHunter(email) {
+//     const apiKey = process.env.EMAIL_VALIDATION_API_KEY;
 
-    try {
-        const response = await axios.get(`https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${apiKey}`);
+//     try {
+//         const response = await axios.get(`https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${apiKey}`);
 
-        if (response.data && response.data.data && response.data.data.status === 'valid') {
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        console.error('Error validating email:', error);
-        return false;
-    }
-}
+//         if (response.data && response.data.data && response.data.data.status === 'valid') {
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     } catch (error) {
+//         console.error('Error validating email:', error);
+//         return false;
+//     }
+// }
 
 // signup function to register a new user
 const signup = async (req, res) => {
@@ -38,10 +38,10 @@ const signup = async (req, res) => {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
-        const isEmailValid = await verifyEmailWithHunter(email);
-        if (!isEmailValid) {
-            return res.status(400).json({ message: 'Invalid or risky email address' });
-        }
+        // const isEmailValid = await verifyEmailWithHunter(email);
+        // if (!isEmailValid) {
+        //     return res.status(400).json({ message: 'Invalid or risky email address' });
+        // }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
