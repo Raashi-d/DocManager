@@ -395,33 +395,26 @@ const Dashboard = () => {
             >
               <FiX />
             </button>
-            <div className="file-preview-container">{renderFilePreview()}</div>
-            <div className="file-preview-details">
-              <h3>{selectedFile.fileName}</h3>
-              <p>Type: {selectedFile.fileType}</p>
-              <p>Size: {formatFileSize(selectedFile.size)}</p>
-              <p>
-                Uploaded: {new Date(selectedFile.uploadDate).toLocaleString()}
-              </p>
-              <div className="file-preview-actions">
-                <button
-                  className="download-button"
-                  onClick={() => handleDownload(selectedFile)}
-                >
-                  <FiDownload /> Download
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => {
-                    setFileToDelete(selectedFile);
-                    setSelectedFile(null);
-                  }}
-                >
-                  <FiTrash2 /> Delete
-                </button>
+
+            <div className="file-preview-details"> 
+              <h3 className="pic-name">{selectedFile.fileName}</h3>
+              <div className="file-preview-container">{renderFilePreview()}</div>
+                <h5>Type: {selectedFile.fileType}</h5>
+                <h5>Size: {formatFileSize(selectedFile.size)}</h5>
+                <h5>
+                  Uploaded: {new Date(selectedFile.uploadDate).toLocaleString()}
+                </h5>
+                <div className="btn-set">
+                  <button className="del-btn" onClick={() => {setFileToDelete(selectedFile); setSelectedFile(null);}}>
+                    <FiTrash2 /> Delete
+                  </button>
+
+                  <button className="down-btn" onClick={() => handleDownload(selectedFile)}>
+                    <FiDownload /> Download
+                  </button>
+                </div> 
               </div>
             </div>
-          </div>
         </div>
       )}
 
@@ -433,7 +426,7 @@ const Dashboard = () => {
             <p>Are you sure you want to delete "{fileToDelete.fileName}"?</p>
             <div className="modal-actions">
               <button className="confirm-button" onClick={handleDeleteFile}>
-                Confirm Delete
+                Delete
               </button>
               <button
                 className="cancel-button"
